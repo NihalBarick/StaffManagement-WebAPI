@@ -23,6 +23,12 @@ namespace StaffManagement.Controllers
             this.validationHelper = new ValidationHelper();
         }
 
+        public UsersController(IUserProviderModel userProviderModel, IValidationHelper validationHelper)
+        {
+            this.userProviderModel = userProviderModel;
+            this.validationHelper = validationHelper;
+        }
+
         [HttpGet]
         [Route("api/Users/staff")]
         public IHttpActionResult GetStaff()
@@ -41,15 +47,22 @@ namespace StaffManagement.Controllers
         [Route("api/Users")]
         public IHttpActionResult Post([FromBody] LoginRequestData loginRequestData)
         {
-            int userId = this.userProviderModel.AuthenticateUser(loginRequestData.UserName, loginRequestData.Password);
-
-            if (userId > 0)
+            if (loginRequestData != null)
             {
-                return Ok(this.userProviderModel.GetUserRegistrationData(userId));
+                int userId = this.userProviderModel.AuthenticateUser(loginRequestData.UserName, loginRequestData.Password);
+
+                if (userId > 0)
+                {
+                    return Ok(this.userProviderModel.GetUserRegistrationData(userId));
+                }
+                else
+                {
+                    return Unauthorized();
+                }
             }
             else
             {
-                return Unauthorized();
+                return BadRequest();
             }
         }
 

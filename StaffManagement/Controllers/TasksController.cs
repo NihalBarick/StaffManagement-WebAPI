@@ -20,8 +20,13 @@ namespace StaffManagement.Controllers
         public TasksController()
         {
             this.taskProviderModel = new TaskProviderModel();
-
             this.validationHelper = new ValidationHelper();
+        }
+
+        public TasksController(ITaskProviderModel taskProviderModel, IValidationHelper validationHelper)
+        {
+            this.taskProviderModel = taskProviderModel;
+            this.validationHelper = validationHelper;
         }
 
         [HttpGet]
